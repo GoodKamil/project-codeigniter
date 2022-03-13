@@ -17,7 +17,7 @@ if (file_exists(SYSTEMPATH . 'Config/Routes.php')) {
  * --------------------------------------------------------------------
  */
 $routes->setDefaultNamespace('App\Controllers');
-$routes->setDefaultController('Home');
+$routes->setDefaultController('AuthController');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
@@ -31,10 +31,21 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Home::index', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'createAccount', 'AccountController::createAccount', ['filter' => 'auth']);
-$routes->match(['get', 'post'], 'LoginUser', 'AccountController::LoginUser', ['filter' => 'auth']);
-$routes->get('Logout', 'AccountController::Logout');
+
+
+
+
+
+$routes->group('', ['filter' => 'auth'], function ($routes) {
+    $routes->get('/', 'AuthController::index');
+    $routes->match(['get', 'post'], 'createAccount', 'AuthController::createAccount');
+    $routes->match(['get', 'post'], 'LoginUser', 'AuthController::LoginUser');
+    $routes->get('Logout', 'AuthController::Logout');
+    $routes->match(['get', 'post'], 'Transfer', 'UserController::Transfer');
+});
+
+// $routes->group('', ['filter' => 'noauth'], function ($routes) {
+// });
 
 /*
  * --------------------------------------------------------------------

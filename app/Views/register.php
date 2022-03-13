@@ -4,6 +4,9 @@
 <div class="contener__login">
     <div class="contener__register-wrapper">
         <div class="create_account">
+            <div class="title__div">
+                <h1 class="title__div--text">Zarejestruj się</h1>
+            </div>
             <form action="#" method="post">
                 <div class="form__contener">
                     <div class="register__input">

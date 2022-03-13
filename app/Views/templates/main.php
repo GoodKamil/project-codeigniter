@@ -15,12 +15,9 @@
     <title>AppBank</title>
 </head>
 
-<?php if (session()->get('logged')) : ?>
-    <?= view_cell('\App\Libraries\Render::renderMenu') ?>
-    <?php $this->renderSection('content') ?>
-<?php else : ?>
-    <?php $this->renderSection('content') ?>
-<?php endif; ?>
+
+<?php $this->renderSection('content') ?>
+
 
 
 

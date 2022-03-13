@@ -2,8 +2,17 @@
 
 namespace App\Controllers;
 
-class AccountController extends BaseController
+class AuthController extends BaseController
 {
+
+    public function index()
+    {
+        if (!session()->get('logged'))
+            return view('login');
+
+        return view('Users/main');
+    }
+
     public function createAccount()
     {
         return view('register');
