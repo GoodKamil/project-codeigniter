@@ -39,6 +39,8 @@ $routes->get('Logout', 'AuthController::Logout');
 
 $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->match(['get', 'post'], 'Transfer', 'User\UserController::Transfer');
+    $routes->match(['get', 'post'], 'Settings', 'User\UserController::Settings');
+    $routes->match(['get', 'post'], 'editUser', 'User\UserController::editUser');
     $routes->add('dashboard', 'User\UserController::index');
 });
 

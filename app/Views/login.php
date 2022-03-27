@@ -4,6 +4,11 @@
 <div class="contener__login">
     <div class="contener__login-wrapper">
         <div class="create_account">
+            <?php if (session()->getFlashdata('successInsert')) : ?>
+                <div class="success">
+                    <p class="seccuess-tekst">Pomyślnie utworzono konto </p>
+                </div>
+            <?php endif; ?>
             <div class="title__div">
                 <h1 class="title__div--text">Zaloguj sie</h1>
             </div>
@@ -12,7 +17,7 @@
                     <div class="input__contener">
                         <label for="" class="input__contener--text">Login:</label>
                         <div class="wrapper--icon">
-                            <input type="text" name="loginKey" required class="input__contener--input">
+                            <input type="text" name="loginKey" value="<?= set_value('loginKey', '') ?>" class="input__contener--input">
                             <i class="icon bi bi-key"></i>
                         </div>
                         <p class="error"><?= isset($validation) && $validation->hasError('loginKey') ? $validation->getError('loginKey') : '&nbsp' ?> </p>
@@ -20,15 +25,15 @@
                     <div class="input__contener">
                         <label for="" class="input__contener--text">Email:</label>
                         <div class="wrapper--icon">
-                            <input type="email" name="username" autocomplete="off" required class="input__contener--input">
+                            <input type="email" name="email" autocomplete="off" value="<?= set_value('email', '') ?>" class="input__contener--input">
                             <i class="icon bi bi-at"></i>
                         </div>
-                        <p class="error"><?= isset($validation) && $validation->hasError('username') ? $validation->getError('username') : '&nbsp' ?> </p>
+                        <p class="error"><?= isset($validation) && $validation->hasError('email') ? $validation->getError('email') : '&nbsp' ?> </p>
                     </div>
                     <div class="input__contener">
                         <label for="" class="input__contener--text">Password:</label>
                         <div class="wrapper--icon">
-                            <input type="password" name="password" required class="input__contener--input">
+                            <input type="password" name="password" value="<?= set_value('password', '') ?>" class="input__contener--input">
                             <i class="icon  bi bi-lock"></i>
                         </div>
                         <p class="error"><?= isset($validation) && $validation->hasError('password') ? $validation->getError('password') : '&nbsp' ?> </p>

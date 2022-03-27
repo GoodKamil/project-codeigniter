@@ -15,6 +15,11 @@ class AuthValidation
 
     public function validUser(string $str, string $fields, array $data): bool
     {
-        return true;
+        return $this->db->validUser($data['email'], $data['password']);
+    }
+
+    public function is_key(string $str, string $fields, array $data): bool
+    {
+        return $this->db->is_key($data['loginKey'], $data['email']);
     }
 }
