@@ -10,8 +10,8 @@ class NoAuth implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-        if (!session()->get('logged'))
-            return redirect()->to('/');
+        if (session()->get('isLoggedIn'))
+            return redirect()->to('dashboard');
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)

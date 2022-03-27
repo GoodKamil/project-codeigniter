@@ -23,25 +23,25 @@
                         <div class="input__contener flex-45">
                             <label for="" class="input__contener--text">Imię:</label>
                             <div class="wrapper--icon">
-                                <input type="text" name="imie" autocomplete="off" required class="input__contener--input">
+                                <input type="text" name="firstname" autocomplete="off" class="input__contener--input">
                                 <i class="icon bi bi-person"></i>
                             </div>
-                            <p class="error"><?= isset($validation) && $validation->hasError('imie') ? $validation->getError('imie') : '&nbsp' ?> </p>
+                            <p class="error"><?= isset($validation) && $validation->hasError('firstname') ? $validation->getError('firstname') : '&nbsp' ?> </p>
                         </div>
                         <div class="input__contener flex-45">
                             <label for="" class="input__contener--text">Nazwisko:</label>
                             <div class="wrapper--icon">
-                                <input type="text" name="nazwisko" autocomplete="off" required class="input__contener--input">
+                                <input type="text" name="lastname" autocomplete="off" class="input__contener--input">
                                 <i class="icon bi bi-person"></i>
                             </div>
-                            <p class="error"><?= isset($validation) && $validation->hasError('nazwisko') ? $validation->getError('nazwisko') : '&nbsp' ?> </p>
+                            <p class="error"><?= isset($validation) && $validation->hasError('lastname') ? $validation->getError('lastname') : '&nbsp' ?> </p>
                         </div>
                     </div>
                     <div class="register">
                         <div class="input__contener flex-45">
                             <label for="" class="input__contener--text">Hasło:</label>
                             <div class="wrapper--icon">
-                                <input type="password" name="password" required class="input__contener--input">
+                                <input type="password" name="password" class="input__contener--input">
                                 <i class="icon  bi bi-lock"></i>
                             </div>
                             <p class="error"><?= isset($validation) && $validation->hasError('password') ? $validation->getError('password') : '&nbsp' ?> </p>
@@ -49,7 +49,7 @@
                         <div class="input__contener flex-45">
                             <label for="" class="input__contener--text">Powtórz hasło:</label>
                             <div class="wrapper--icon">
-                                <input type="password" name="RepeatPassword" required class="input__contener--input">
+                                <input type="password" name="RepeatPassword" class="input__contener--input">
                                 <i class="icon  bi bi-lock"></i>
                             </div>
                             <p class="error"><?= isset($validation) && $validation->hasError('RepeatPassword') ? $validation->getError('RepeatPassword') : '&nbsp' ?> </p>
@@ -59,7 +59,7 @@
                         <div class="input__contener flex-45">
                             <label for="" class="input__contener--text">Numer Telefonu:</label>
                             <div class="wrapper--icon">
-                                <input type="tel" name="phone" autocomplete="off" pattern="[+]{1}[0-9]{11,14}" required class="input__contener--input no-arrow">
+                                <input type="tel" name="phone" autocomplete="off" pattern="{1}[0-9]{11,14}" class="input__contener--input no-arrow">
                                 <i class=" icon bi bi-phone"></i>
                             </div>
                             <p class="error"><?= isset($validation) && $validation->hasError('phone') ? $validation->getError('phone') : '&nbsp' ?> </p>
@@ -67,7 +67,7 @@
                         <div class="input__contener flex-45">
                             <label for="" class="input__contener--text">Key:</label>
                             <div class="wrapper--icon">
-                                <input type="number" name="Key" autocomplete="off" required class="input__contener--input no-arrow">
+                                <input type="number" name="Key" autocomplete="off" class="input__contener--input no-arrow">
                                 <i class="icon bi bi-key"></i>
                                 <p class="error"><?= isset($validation) && $validation->hasError('Key') ? $validation->getError('Key') : '&nbsp' ?> </p>
                             </div>

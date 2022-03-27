@@ -1,18 +1,16 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\User;
+
+use App\Controllers\BaseController;
 
 class UserController extends BaseController
 {
 
     public function index()
     {
-        if (!session()->get('logged'))
-            return view('login');
-
-        return view('Users/main');
+        return view('Users/dashboard');
     }
-
 
     public function Transfer()
     {

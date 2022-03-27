@@ -92,6 +92,9 @@ body {
 }
 .wrapper--icon {
   position: relative;
+
+  display: flex;
+  align-items: center;
 }
 .icon {
   position: absolute;
@@ -110,7 +113,7 @@ body {
 .register {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  /* align-items: center; */
 }
 .flex-45 {
   flex-basis: 45%;

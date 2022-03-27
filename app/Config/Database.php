@@ -31,11 +31,11 @@ class Database extends Config
      * @var array
      */
     public $default = [
-        'DSN'      => '',
+        'DSN'      => 'bank',
         'hostname' => 'localhost',
-        'username' => '',
+        'username' => 'root',
         'password' => '',
-        'database' => '',
+        'database' => 'bank',
         'DBDriver' => 'MySQLi',
         'DBPrefix' => '',
         'pConnect' => false,

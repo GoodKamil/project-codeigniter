@@ -33,19 +33,25 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 
 
-
-
+// $routes->match(['get', 'post'], 'LoginUser', 'AuthController::LoginUser');
+$routes->get('Logout', 'AuthController::Logout');
+// $routes->match(['get', 'post'], 'createAccount', 'AuthController::createAccount');
 
 $routes->group('', ['filter' => 'auth'], function ($routes) {
-    $routes->get('/', 'AuthController::index');
-    $routes->match(['get', 'post'], 'createAccount', 'AuthController::createAccount');
-    $routes->match(['get', 'post'], 'LoginUser', 'AuthController::LoginUser');
-    $routes->get('Logout', 'AuthController::Logout');
-    $routes->match(['get', 'post'], 'Transfer', 'UserController::Transfer');
+    $routes->match(['get', 'post'], 'Transfer', 'User\UserController::Transfer');
+    $routes->add('dashboard', 'User\UserController::index');
 });
 
-// $routes->group('', ['filter' => 'noauth'], function ($routes) {
+$routes->group('', ['filter' => 'noauth'], function ($routes) {
+    $routes->get('/', 'AuthController::index');
+    $routes->match(['get', 'post'], 'LoginUser', 'AuthController::LoginUser');
+    $routes->match(['get', 'post'], 'createAccount', 'AuthController::createAccount');
+});
+
+// $routes->group('User', function ($routes) {
+//     $routes->match(['get', 'post'], 'Transfer', 'User\UserController::Transfer', ['filter' => 'auth']);
 // });
+
 
 /*
  * --------------------------------------------------------------------
