@@ -13,3 +13,29 @@
  *
  * @see: https://codeigniter4.github.io/CodeIgniter4/
  */
+
+
+if (!function_exists('GetBank')) {
+    /**
+     * 
+     * Nazwy i numery banków
+     *
+     */
+    function GetBank()
+    {
+        return
+            [
+                '1010' => 'Narodowy Bank Polski',
+                '1020' => 'PKO BP',
+                '1030' => 'Bank Handlowy (Citi Handlowy)',
+                '1050' => 'ING Bank Śląski',
+                '1090' => 'Santander Bank Polska',
+                '1130' => 'BGK',
+                '1160' => 'Bank Millennium',
+                '1240' => 'Pekao SA',
+                '2490' => 'Alior Bank, T-Mobile Usługi Bankowe',
+                '1930' => 'Bank Polskiej Spółdzielczości',
+                '2510' => 'Bank Wielkopolski'
+            ];
+    }
+}

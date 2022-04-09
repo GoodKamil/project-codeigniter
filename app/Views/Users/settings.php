@@ -2,8 +2,8 @@
 
 <?php $this->section('content') ?>
 
-<section class="contener__user">
-    <div class="wrapper_user">
+<section class="contener__account">
+    <div class="contener__account--div">
         <div class="contener__settings">
             <div class="contener__settings-tekst">
                 <p class="settings-tekst">Imie:</p>
@@ -26,14 +26,6 @@
             </div>
             <div class="contener__settings-tekst">
                 <p class="settings-tekst-dane"><?= $user[0]->Email ?></p>
-            </div>
-        </div>
-        <div class="contener__settings">
-            <div class="contener__settings-tekst">
-                <p class="settings-tekst">Numer konta:</p>
-            </div>
-            <div class="contener__settings-tekst">
-                <p class="settings-tekst-dane"><?= $user[0]->NumberAccount ?></p>
             </div>
         </div>
         <div class="contener__settings">

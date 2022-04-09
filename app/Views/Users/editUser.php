@@ -2,14 +2,14 @@
 
 <?php $this->section('content') ?>
 
-<div class="contener__login">
-    <div class="contener__register-wrapper color-contener ">
+<section class="contener__account">
+    <div class="contener__account--div">
         <?php if (session()->getFlashdata('errorUpdate')) : ?>
             <div class="error_contener">
                 <p class="error_contener-tekst">Wystąpił problem przy edytowaniu konta</p>
             </div>
         <?php endif; ?>
-        <div class="create_account">
+        <div>
             <div class="title__div">
                 <h1 class="title__div--text">Edytuj konto</h1>
             </div>
@@ -90,6 +90,6 @@
             </form>
         </div>
     </div>
-</div>
+</section>
 
 <?php $this->endSection() ?>

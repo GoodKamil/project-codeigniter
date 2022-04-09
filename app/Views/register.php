@@ -64,7 +64,7 @@
                         <div class="input__contener flex-45">
                             <label for="" class="input__contener--text">Numer Telefonu:</label>
                             <div class="wrapper--icon">
-                                <input type="tel" name="phone" autocomplete="off" value="<?= set_value('phone', ' ') ?>" pattern="{1}[0-9]{11,14}" class="input__contener--input no-arrow">
+                                <input type="number" name="phone" autocomplete="off" value="<?= set_value('phone', ' ') ?>" pattern="{1}[0-9]{11,14}" class="input__contener--input no-arrow">
                                 <i class=" icon bi bi-phone"></i>
                             </div>
                             <p class="error"><?= isset($validation) && $validation->hasError('phone') ? $validation->getError('phone') : '&nbsp' ?> </p>

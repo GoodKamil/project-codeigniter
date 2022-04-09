@@ -14,11 +14,11 @@ class AuthModel extends Model
         $this->db = &$db;
     }
 
-    public function createUser(array $params): bool
+    public function createUser(array $params): int
     {
         $builder = $this->db->table('UsersList');
         $builder->insert($params);
-        return $builder->countAll();
+        return $this->db->connID->insert_id;
     }
 
     public function getUser(array $params): array
@@ -41,5 +41,11 @@ class AuthModel extends Model
         $builder = $this->db->table('UsersList');
         $builder->update($set, $where);
         return $builder->countAll();
+    }
+
+    public function insertNumberAccount(array $params)
+    {
+        $builder = $this->db->table('numberaccount');
+        $builder->insert($params);
     }
 }

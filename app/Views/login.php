@@ -25,18 +25,18 @@
                     <div class="input__contener">
                         <label for="" class="input__contener--text">Email:</label>
                         <div class="wrapper--icon">
-                            <input type="email" name="email" autocomplete="off" value="<?= set_value('email', '') ?>" class="input__contener--input">
+                            <input type="email" name="emailLogin" autocomplete="off" value="<?= set_value('emailLogin', '') ?>" class="input__contener--input">
                             <i class="icon bi bi-at"></i>
                         </div>
-                        <p class="error"><?= isset($validation) && $validation->hasError('email') ? $validation->getError('email') : '&nbsp' ?> </p>
+                        <p class="error"><?= isset($validation) && $validation->hasError('emailLogin') ? $validation->getError('emailLogin') : '&nbsp' ?> </p>
                     </div>
                     <div class="input__contener">
                         <label for="" class="input__contener--text">Password:</label>
                         <div class="wrapper--icon">
-                            <input type="password" name="password" value="<?= set_value('password', '') ?>" class="input__contener--input">
+                            <input type="password" name="passwordLogin" value="<?= set_value('passwordLogin', '') ?>" class="input__contener--input">
                             <i class="icon  bi bi-lock"></i>
                         </div>
-                        <p class="error"><?= isset($validation) && $validation->hasError('password') ? $validation->getError('password') : '&nbsp' ?> </p>
+                        <p class="error"><?= isset($validation) && $validation->hasError('passwordLogin') ? $validation->getError('passwordLogin') : '&nbsp' ?> </p>
                     </div>
                     <div class="button__contener">
                         <button class="button_contener--btn" type="submit">Zaloguj się</button>

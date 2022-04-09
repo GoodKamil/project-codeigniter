@@ -8,6 +8,7 @@ use App\Controllers\BaseController;
 class UserController extends BaseController
 {
     protected $db;
+    protected $data;
 
     public function __construct()
     {
@@ -22,7 +23,8 @@ class UserController extends BaseController
 
     public function Transfer()
     {
-        return view('Users/transfer');
+        $this->data['tableBank'] = GetBank();
+        return view('Users/transfer', $this->data);
     }
 
     public function Settings()
@@ -81,5 +83,15 @@ class UserController extends BaseController
 
 
         return view('Users/editUser', $this->data);
+    }
+
+    public function viewHistory()
+    {
+        return view('Users/viewHistory');
+    }
+
+    public function viewHistoryOne(int $id)
+    {
+        return view('Users/viewHistoryOne');
     }
 }

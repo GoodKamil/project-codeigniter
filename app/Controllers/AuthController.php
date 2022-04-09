@@ -56,9 +56,8 @@ class AuthController extends BaseController
                     ]
                 ],
                 'phone' => [
-                    'rules' => 'required|numeric|exact_length[9]',
+                    'rules' => 'required|exact_length[9]',
                     'errors' => [
-                        'numeric' => 'Numer telefonu musi składać sie z liczb',
                         'exact_length' => 'Numer telefonu powinien składać sie z 9 liczb'
                     ]
                 ]
@@ -70,19 +69,23 @@ class AuthController extends BaseController
             }
 
             $params = [
-                'FirstName' => htmlentities($this->request->getPost('firstname')),
-                'LastName' =>  htmlentities($this->request->getPost('lastname')),
-                'Email' => htmlentities($this->request->getPost('email')),
+                'FirstName' => $this->request->getPost('firstname', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+                'LastName' =>  $this->request->getPost('lastname', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+                'Email' => $this->request->getPost('email', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
                 'NumberPhone' => $this->request->getPost('phone'),
                 'KeyLogin' => $this->request->getPost('Key'),
-                'Password' => $this->hashPassword(htmlentities($this->request->getPost('password'))),
-                'NumberAccount' => $this->createNumberAcount(),
+                'Password' => $this->hashPassword($this->request->getPost('password', FILTER_SANITIZE_FULL_SPECIAL_CHARS)),
                 'created' => date('Y-m-d'),
                 'permissions' => 1
 
             ];
             $result = $this->db->createUser($params);
             if ($result) {
+                $params2 = [
+                    'number' => $this->createNumberAcount(),
+                    'id_U' => $result
+                ];
+                $this->db->insertNumberAccount($params2);
                 session()->setFlashdata('successInsert', 'true');
                 return view('login');
             } else {
@@ -99,15 +102,15 @@ class AuthController extends BaseController
 
         if ($this->request->getMethod() == 'post') {
             $checkVali = [
-                'email' => [
+                'emailLogin' => [
                     'rules' => 'required|valid_email',
                     'errors' => [
                         'valid_email' => 'Niepoprawny adres e-mail'
                     ]
 
                 ],
-                'password' => [
-                    'rules' => 'min_length[8]|validUser[email,password]',
+                'passwordLogin' => [
+                    'rules' => 'min_length[8]|validUser[emailLogin,passwordLogin]',
                     'errors' => [
                         'min_length' => 'Hasło musi składać sie z minumium 8 znaków',
                         'validUser' => 'Nieprawidłowe dane użytkownika'
@@ -128,7 +131,7 @@ class AuthController extends BaseController
                 return view('login', $this->data);
             }
             $params = [
-                'Email' => htmlentities($this->request->getPost('email')),
+                'Email' => $this->request->getPost('emailLogin', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
                 'KeyLogin' => htmlentities($this->request->getPost('loginKey')),
             ];
             $user = $this->db->getUser($params);
@@ -163,7 +166,7 @@ class AuthController extends BaseController
         for ($x = 0; $x < 2; $x++) {
             $numberAccount .= rand(0, 9);
         }
-        $numberAccount .= '21200290';
+        $numberAccount .= '25100290';
 
         for ($x = 0; $x < 16; $x++) {
             $numberAccount .= rand(0, 9);
