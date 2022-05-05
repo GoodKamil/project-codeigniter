@@ -39,3 +39,19 @@ if (!function_exists('GetBank')) {
             ];
     }
 }
+
+if (!function_exists('GetNameBank')) {
+    /**
+     * 
+     * Pobranie nazwy banku po numerze 
+     *
+     */
+    function GetNameBank(int $numer)
+    {
+        $bank = GetBank();
+        foreach ($bank as $key => $value) {
+            if ($key === $numer)
+                return $value;
+        }
+    }
+}

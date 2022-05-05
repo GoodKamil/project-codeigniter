@@ -69,12 +69,12 @@ class AuthController extends BaseController
             }
 
             $params = [
-                'FirstName' => $this->request->getPost('firstname', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-                'LastName' =>  $this->request->getPost('lastname', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
-                'Email' => $this->request->getPost('email', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+                'FirstName' => $this->request->getPost('firstname'),
+                'LastName' =>  $this->request->getPost('lastname'),
+                'Email' => $this->request->getPost('email'),
                 'NumberPhone' => $this->request->getPost('phone'),
                 'KeyLogin' => $this->request->getPost('Key'),
-                'Password' => $this->hashPassword($this->request->getPost('password', FILTER_SANITIZE_FULL_SPECIAL_CHARS)),
+                'Password' => $this->hashPassword($this->request->getPost('password')),
                 'created' => date('Y-m-d'),
                 'permissions' => 1
 
@@ -110,7 +110,7 @@ class AuthController extends BaseController
 
                 ],
                 'passwordLogin' => [
-                    'rules' => 'min_length[8]|validUser[emailLogin,passwordLogin]',
+                    'rules' => 'required|min_length[8]|validUser[emailLogin,passwordLogin]',
                     'errors' => [
                         'min_length' => 'Hasło musi składać sie z minumium 8 znaków',
                         'validUser' => 'Nieprawidłowe dane użytkownika'
@@ -131,7 +131,7 @@ class AuthController extends BaseController
                 return view('login', $this->data);
             }
             $params = [
-                'Email' => $this->request->getPost('emailLogin', FILTER_SANITIZE_FULL_SPECIAL_CHARS),
+                'Email' => $this->request->getPost('emailLogin'),
                 'KeyLogin' => htmlentities($this->request->getPost('loginKey')),
             ];
             $user = $this->db->getUser($params);

@@ -34,4 +34,17 @@ class ValidationModel extends Model
         } else
             return password_verify($password, $user[0]->Password);
     }
+
+    public function checkNumberAccount($accountNumber): bool
+    {
+        $builder = $this->db->table('numberaccount');
+        $result = $builder->where('number', $accountNumber)->get()->getResult();
+        if ($result) {
+            foreach ($result as $key => $value) {
+                session()->set('isNumber', $value->id_N);
+            }
+            return true;
+        }
+        return false;
+    }
 }

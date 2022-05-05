@@ -1,6 +1,7 @@
 <?php $this->extend('templates/main') ?>
 <?php $this->section('content') ?>
 
+
 <div class="contener__login">
     <div class="contener__login-wrapper">
         <div class="create_account">
