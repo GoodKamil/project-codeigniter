@@ -1,7 +1,6 @@
-<?php $this->extend('Users/dashboard') ?>
+<?php $this->extend('templates/dashboard') ?>
 
 <?php $this->section('content') ?>
-<?php print_r(session()->get('isNumber')) ?>
 
 <section class="contener__account">
     <div class="contener__account--div">
@@ -13,13 +12,19 @@
         <form action="<?= base_url('TransferBank') ?>" method="post">
             <div class="acount">
                 <h2 class="account--text">Numer konta</h2>
-                <div class="select--acount">
-                    <select name="account_you" class="form--input" id="">
-                        <?php foreach ($numberAccount as $key => $value) : ?>
-                            <option value="<?= $value->id_N ?>"><?= $value->number ?></option>
-                        <?php endforeach; ?>
-                    </select>
+                <div class="row__account">
+                    <div class="select--acount basis">
+                        <select name="account_you" class="form--input" id="changeNumerAccount">
+                            <?php foreach ($numberAccount as $key => $value) : ?>
+                                <option <?= isset($_POST['account_you']) && $_POST['account_you'] == $value->id_N  ? 'selected' : ''  ?> value="<?= $value->id_N ?>"><?= $value->number ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="select--acount">
+                        <input type="text" value='<?= set_value('priceSource', $priceOneAccount) ?>' id='changePrice' name="priceSource" class='form--input' data-option='priceOne' readonly>
+                    </div>
                 </div>
+                <p class="error"><?= isset($validation) && $validation->hasError('priceSource') ? $validation->getError('priceSource') : '&nbsp' ?> </p>
             </div>
             <div class="acount">
                 <h2 class="account--text">Dane Odbiorcy</h2>
@@ -32,14 +37,15 @@
                     <div class="form">
                         <label for="numberAccount" class="form--label">(*) Numer konta</label>
                         <input type="number" data-option="numberBank" class="form--input" name='numberAccount' value="<?= set_value('numberAccount', '') ?>">
-                        <p data-option="errorNumber" style="visibility:hidden;" class="error">Niepoprawny numer konta</p>
+                        <p class="error"><?= isset($validation) && $validation->hasError('numberAccount') ? $validation->getError('numberAccount') : '&nbsp' ?> </p>
                     </div>
                     <div class="form">
                         <label for="nameBank" class="form--label">(*) Nazwa banku</label>
                         <select name="nameBank" data-option="nameBank" class="form--input" id="">
                             <?php foreach ($tableBank as $key => $value) : ?>
-                                <option value="<?= $key ?>"><?= $value ?></option>
+                                <option <?= isset($_POST['nameBank']) && $_POST['nameBank'] == $key ? 'selected' : '' ?> value="<?= $key ?>"><?= $value ?></option>
                             <?php endforeach; ?>
+
                         </select>
                         <p class="error"><?= isset($validation) && $validation->hasError('nameBank') ? $validation->getError('nameBank') : '&nbsp' ?> </p>
                     </div>
@@ -49,14 +55,13 @@
                         <p class="error"><?= isset($validation) && $validation->hasError('price') ? $validation->getError('price') : '&nbsp' ?> </p>
                     </div>
                     <div class="form">
-                        <label for="description" class="form--label">Tytuł <span data-option="Title">7</span>/140</label>
+                        <label for="description" class="form--label">Tytuł <span data-option="Title"><?= strlen(set_value('description', 'Przelew')) ?></span>/140</label>
                         <input type="text" data-option="transferTitle" class="form--input" name='description' value="<?= set_value('description', 'Przelew') ?>">
-                        <p data-option="errorNumberTitle" style="visibility:hidden;" class="error">Maksymalna długośc tytułu wynosi 140znaków</p>
+                        <p class="error"><?= isset($validation) && $validation->hasError('description') ? $validation->getError('description') : '&nbsp' ?></p>
                     </div>
                     <div class="form">
                         <label for="dateOd" class="form--label">Data</label>
-                        <input type="date" class="form--input" disabled name='data' value="<?= date('Y-m-d') ?>">
-                        <input type="hidden" class="form--input" name='dataTransfer' value="<?= date('Y-m-d') ?>">
+                        <input type="date" class="form--input" readonly name='dataTransfer' value="<?= date('Y-m-d') ?>">
                         <p style="margin-bottom:0px" class="error">&nbsp</p>
                     </div>
                     <div class="form">
@@ -67,6 +72,8 @@
         </form>
     </div>
 </section>
+
+<script src=<?= base_url('js/ajax.js') ?>></script>
 
 
 <?php $this->endSection() ?>

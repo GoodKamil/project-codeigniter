@@ -1,50 +1,38 @@
 const transferTitle = document.querySelector('[data-option="transferTitle"]');
 const Title = document.querySelector('[data-option="Title"]');
-const nameBank = document.querySelector('[data-option="nameBank"]');
-const numberBank = document.querySelector('[data-option="numberBank"]');
-const errorNumber = document.querySelector('[data-option="errorNumber"]');
-const errorNumberTitle = document.querySelector(
-  '[data-option="errorNumberTitle"]'
-);
 
-let isError = false;
-let tooLong = false;
+const priceOne = document.querySelector('[data-option="priceOne"]');
+const priceTwo = document.querySelector('[data-option="priceTwo"]');
+const NumberOne = document.querySelector('[data-option="NumberOne"]');
+const NumberOneID = document.querySelector('[data-option="NumberOneID"]');
+const NumberTwo = document.querySelector('[data-option="NumberTwo"]');
+const NumberTwoID = document.querySelector('[data-option="NumberTwoID"]');
+const iconChange = document.querySelector('[data-option="iconChangeAccount"]');
+
+if (iconChange) {
+  let tmp = '';
+
+  const changeValueAccount = () => {
+    tmp = priceOne.value;
+    priceOne.value = priceTwo.value;
+    priceTwo.value = tmp;
+
+    tmp = NumberOne.value;
+    NumberOne.value = NumberTwo.value;
+    NumberTwo.value = tmp;
+
+    tmp = NumberOneID.value;
+    NumberOneID.value = NumberTwoID.value;
+    NumberTwoID.value = tmp;
+  };
+
+  iconChange.addEventListener('click', function () {
+    changeValueAccount();
+  });
+}
 
 if (Title) {
   transferTitle.addEventListener('input', function () {
     Title.textContent = event.target.value.length;
-    if (Title.textContent === '0') {
-      transferTitle.value = 'Przelew';
-      Title.textContent = '7';
-    }
-
-    if (event.target.value.length > 140 && !tooLong) {
-      tooLong = true;
-      errorNumberTitle.style.visibility = 'visible';
-    }
-    if (event.target.value.length <= 140 && tooLong) {
-      tooLong = false;
-      errorNumberTitle.style.visibility = 'hidden';
-    }
-  });
-
-  const NumberAccountBank = Number => {
-    if (Number.length === 6) {
-      if (Number.slice(2, 6) !== nameBank.value) {
-        isError = true;
-        errorNumber.style.visibility = 'visible';
-      } else if (isError) {
-        isError = false;
-        errorNumber.style.visibility = 'hidden';
-      }
-    }
-  };
-
-  numberBank.addEventListener('input', function () {
-    NumberAccountBank(event.target.value);
-  });
-
-  nameBank.addEventListener('change', function () {
-    NumberAccountBank(numberBank.value);
   });
 }

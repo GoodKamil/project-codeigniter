@@ -14,6 +14,9 @@
  * @see: https://codeigniter4.github.io/CodeIgniter4/
  */
 
+use App\Models\UserModel;
+use App\Models\AuthModel;
+use App\Models\EmployeeModel;
 
 if (!function_exists('GetBank')) {
     /**
@@ -53,5 +56,119 @@ if (!function_exists('GetNameBank')) {
             if ($key === $numer)
                 return $value;
         }
+    }
+}
+
+if (!function_exists('GetAccount')) {
+    /**
+     * 
+     * Pobranie numeru konta bankowego na podstawie ID
+     *
+     */
+
+    function GetAccount(string $numer, string $column, string $search = 'id_N')
+    {
+
+        $db = db_connect();
+        $dbUser = new UserModel($db);
+        $result = $dbUser->getAccountUser($numer, $search);
+        return $result[0]->$column ??  $numer;
+    }
+}
+
+if (!function_exists('GetUser')) {
+    /**
+     * 
+     * Pobranie danych o użytkowniku na  podstawie numeru konta
+     *
+     */
+
+    function GetUser(string $numer)
+    {
+
+        $id = GetAccount($numer, 'id_U');
+        $db = db_connect();
+        $dbAuth = new AuthModel($db);
+        $result = $dbAuth->getUser(['id_U' => $id]);
+        return $result[0]->FirstName . ' ' . $result[0]->LastName ?? 'Brak danych o nadawcy';
+    }
+}
+
+if (!function_exists('GetUserID')) {
+    /**
+     * 
+     * Pobranie danych o użytkowniku na podstawie ID
+     *
+     */
+
+    function GetUserID(string $id)
+    {
+
+        $db = db_connect();
+        $dbAuth = new AuthModel($db);
+        $result = $dbAuth->getUser(['id_U' => $id]);
+        return $result[0]->FirstName . ' ' . $result[0]->LastName ?? 'Brak danych o kliencie';
+    }
+}
+
+
+if (!function_exists('CreateNumberAccount')) {
+    /**
+     * 
+     * Generator numeru bankowego
+     *
+     */
+    function CreateNumberAccount(): string
+    {
+        $numberAccount = '';
+
+
+        for ($x = 0; $x < 2; $x++) {
+            $numberAccount .= rand(0, 9);
+        }
+        $numberAccount .= '25100290';
+
+        for ($x = 0; $x < 16; $x++) {
+            $numberAccount .= rand(0, 9);
+        }
+
+        return $numberAccount;
+    }
+}
+
+if (!function_exists('GetStatus')) {
+    /**
+     * 
+     * Pobranie statusów lub statusu wiadomości
+     *
+     */
+    function GetStatus(int $idStatus = 0): array|string
+    {
+
+        $status = [
+            '1' => 'Wiadomość czeka na weryfikację przez pracownika',
+            '2' => 'Wiadomość przyjęta',
+            '3' => 'Wiadomość odrzucona',
+        ];
+        if (key_exists($idStatus, $status)) {
+            return $status[$idStatus];
+        }
+
+        return $status;
+    }
+}
+
+if (!function_exists('WaitingNews')) {
+    /**
+     * 
+     * Pobranie statusów lub statusu wiadomości
+     *
+     */
+    function WaitingNews(): int
+    {
+        $db = db_connect();
+        $dbEmployee = new EmployeeModel($db);
+        $result = $dbEmployee->getMessages(['status' => '1']);
+        return count($result);
     }
 }

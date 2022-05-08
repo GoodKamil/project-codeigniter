@@ -15,23 +15,44 @@ class UserModel extends Model
     }
 
 
-    public function getAccountUser(string $idUser): array
+    public function getAccountUser(string $param, string $column): array
     {
         $builder = $this->db->table('numberaccount');
-        $result = $builder->where('id_U', $idUser)->get()->getResult();
+        $result = $builder->where($column, $param)->get()->getResult();
         return $result;
     }
-    public function insertTransfer(array $params)
+    public function insertDB(array $params, string $table)
     {
-        $builder = $this->db->table('transfer');
+        $builder = $this->db->table($table);
         $builder->insert($params);
     }
 
     public function getHistory(string $idUser): array
     {
         $builder = $this->db->table('transfer');
-        $builder->join('numberaccount', 'numberaccount.id_N=transfer.transferFrom or numberaccount.id_N=transfer.transferTo');
-        $result = $builder->where('numberaccount.id_U', $idUser)->get()->getResult();
+        $builder->distinct()->join('numberaccount', 'numberaccount.id_N=transfer.transferFrom or numberaccount.id_N=transfer.transferTo');
+        $result = $builder->where('numberaccount.id_U', $idUser)->orderBy('id_T', 'desc')->get()->getResult();
+        return $result;
+    }
+
+    public function transferNumberAccount(int $number)
+    {
+        $builder = $this->db->table('transfer');
+        $result = $builder->where('transferFrom', $number)->orWhere('transferTo', $number)->get()->getResult();
+        return $result;
+    }
+
+    public function getTransfer(int $idTransfer): array
+    {
+        $builder = $this->db->table('transfer');
+        $result = $builder->where('id_T', $idTransfer)->get()->getResult();
+        return $result;
+    }
+
+    public function getMessages(int $id, string $column = 'id_U'): array
+    {
+        $builder = $this->db->table('messages');
+        $result = $builder->where($column, $id)->get()->getResult();
         return $result;
     }
 }

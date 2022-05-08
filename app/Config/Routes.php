@@ -37,7 +37,7 @@ $routes->setAutoRoute(true);
 $routes->get('Logout', 'AuthController::Logout');
 // $routes->match(['get', 'post'], 'createAccount', 'AuthController::createAccount');
 
-$routes->group('', ['filter' => 'auth'], function ($routes) {
+$routes->group('', ['filter' => 'auth', 'filter' => 'permissionuser'], function ($routes) {
     $routes->match(['get', 'post'], 'Transfer', 'User\UserController::Transfer');
     $routes->match(['get', 'post'], 'Settings', 'User\UserController::Settings');
     $routes->match(['get', 'post'], 'editUser', 'User\UserController::editUser');
@@ -45,12 +45,24 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('viewHistory', 'User\UserController::viewHistory');
     $routes->get('viewHistoryOne/(:num)', 'User\UserController::viewHistoryOne/$1');
     $routes->add('dashboard', 'User\UserController::index');
+    $routes->get('HomeUser', 'User\UserController::HomeUser');
+    $routes->get('addAccount', 'User\UserController::addAccount');
+    $routes->get('ajaxAccount', 'User\UserController::ajaxAccount');
+    $routes->add('ownTransfer', 'User\UserController::ownTransfer');
+    $routes->add('reportProblem', 'User\UserController::reportProblem');
+    $routes->get('messagesUser', 'User\UserController::messagesUser');
+    $routes->get('viewMessageUser/(:num)', 'User\UserController::viewMessageUser/$1');
 });
 
 $routes->group('', ['filter' => 'noauth'], function ($routes) {
     $routes->get('/', 'AuthController::index');
     $routes->match(['get', 'post'], 'LoginUser', 'AuthController::LoginUser');
     $routes->match(['get', 'post'], 'createAccount', 'AuthController::createAccount');
+});
+
+$routes->group('', ['filter' => 'auth', 'filter' => 'permissionemployee'], function ($routes) {
+    $routes->get('messages', 'Employee\EmployeeController::messages');
+    $routes->match(['get', 'post'], 'viewMessage/(:num)', 'Employee\EmployeeController::viewMessage/$1');
 });
 
 // $routes->group('User', function ($routes) {

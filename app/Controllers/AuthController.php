@@ -82,7 +82,7 @@ class AuthController extends BaseController
             $result = $this->db->createUser($params);
             if ($result) {
                 $params2 = [
-                    'number' => $this->createNumberAcount(),
+                    'number' => CreateNumberAccount(),
                     'id_U' => $result
                 ];
                 $this->db->insertNumberAccount($params2);
@@ -142,10 +142,13 @@ class AuthController extends BaseController
                 'id_U' => $user[0]->id_U
             ];
             session()->set($sessionArray);
-            return redirect()->to('dashboard');
+            if ($user[0]->permissions === '1')
+                return redirect()->to('HomeUser');
+            else if ($user[0]->permissions === '5 ')
+                return redirect()->to('messages');
         }
 
-        redirect()->to('/');
+        return redirect()->to('/');
     }
     public function Logout()
     {
@@ -156,22 +159,5 @@ class AuthController extends BaseController
     public function hashPassword(string $password): string
     {
         return password_hash($password, PASSWORD_DEFAULT);
-    }
-
-    public function createNumberAcount(): string
-    {
-        $numberAccount = '';
-
-
-        for ($x = 0; $x < 2; $x++) {
-            $numberAccount .= rand(0, 9);
-        }
-        $numberAccount .= '25100290';
-
-        for ($x = 0; $x < 16; $x++) {
-            $numberAccount .= rand(0, 9);
-        }
-
-        return $numberAccount;
     }
 }

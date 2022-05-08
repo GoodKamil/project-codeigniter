@@ -1,4 +1,4 @@
-<?php $this->extend('Users/dashboard') ?>
+<?php $this->extend('templates/dashboard') ?>
 
 <?php $this->section('content') ?>
 
@@ -8,11 +8,11 @@
             <h2 class="account--text">Odbiorca</h2>
             <div class="form">
                 <label for="address" class="form--label">Dane odbiorcy</label>
-                <input type="text" class="form--input" value="Kamil Krawczak,Rąbczyn 87A,62-106 Rąbczyn" disabled>
+                <input type="text" class="form--input" value="<?= $transfer[0]->adresO === '-' ? GetUser($transfer[0]->transferFrom) : esc($transfer[0]->adresO) ?>" disabled>
             </div>
             <div class="form">
                 <label for="address" class="form--label">Numer rachunku</label>
-                <input type="text" class="form--input" value="29 1090 1317 0000 0001 4168 7052" disabled>
+                <input type="text" class="form--input" value="<?= GetAccount($transfer[0]->transferTo, 'number') ?>" disabled>
             </div>
         </div>
         <div class="acount">
@@ -20,31 +20,32 @@
             <div class="contener__form">
                 <div class="form">
                     <label for="address" class="form--label">Tytuł</label>
-                    <input type="text" class="form--input" value="Zakup potrzebny do przeżycia" disabled>
+                    <input type="text" class="form--input" value="<?= $transfer[0]->title ?>" disabled>
                 </div>
                 <div class="form">
                     <label for="address" class="form--label">Kwota</label>
-                    <input type="number" class="form--input" value="213.54" disabled>
+                    <input type="number" class="form--input" value="<?= $transfer[0]->price ?>" disabled>
                 </div>
                 <div class="form">
                     <label for="address" class="form--label">Data operacji</label>
-                    <input type="text" class="form--input" value="2022-16-04" disabled>
+                    <input type="text" class="form--input" value="<?= $transfer[0]->transferDate ?>" disabled>
                 </div>
             </div>
         </div>
         <div class="acount">
             <h2 class="account--text">Nadawca</h2>
             <div class="form">
-                <label for="address" class="form--label">Dane Nadawca</label>
-                <input type="text" class="form--input" value="Kamil Krawczak,Rąbczyn 87A,62-106 Rąbczyn" disabled>
+                <label for="address" class="form--label">Dane Nadawcy</label>
+                <input type="text" class="form--input" value="<?= GetUser($transfer[0]->transferFrom) ?>" disabled>
             </div>
             <div class="form">
                 <label for="address" class="form--label">Numer rachunku</label>
-                <input type="text" class="form--input" value="85 1090 1317 0000 0321 4140 6252" disabled>
+                <input type="text" class="form--input" value="<?= GetAccount($transfer[0]->transferFrom, 'number') ?>" disabled>
             </div>
         </div>
-        <div class="form">
-            <button style="margin:2rem 0;" class="edit__buton" type="submit">Pobierz PDF</button>
+        <div class="button_form">
+            <a href="<?= base_url('viewHistory') ?>"><button class="edit__buton">Powrót</button></a>
+            <button class="edit__buton" type="submit">Pobierz PDF</button>
         </div>
 
     </div>

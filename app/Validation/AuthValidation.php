@@ -30,6 +30,25 @@ class AuthValidation
             return false;
     }
 
+    public function validPriceAccount(string $str, string $fields, array $data): bool
+    {
+        if ($data['priceSource'] <= 0)
+            return false;
+
+        return true;
+    }
+
+    public function validPriceAccountWithPrice(string $str, string $fields, array $data): bool
+    {
+
+
+        if ($data['priceSource'] < $data['price'])
+            return false;
+
+        return true;
+    }
+
+
     public function validNumberAccount(string $str, string $fields, array $data): bool
     {
         $number = substr($data['numberAccount'], 2, 4);
@@ -43,6 +62,14 @@ class AuthValidation
             else
                 return false;
         }
+        return true;
+    }
+
+    public function validDate(string $str, string $fields, array $data): bool
+    {
+        if ($data['dateProblems'] > date('Y-m-d'))
+            return false;
+
         return true;
     }
 }

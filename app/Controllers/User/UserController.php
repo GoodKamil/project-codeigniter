@@ -9,7 +9,7 @@ use App\Controllers\BaseController;
 class UserController extends BaseController
 {
     protected $db;
-    protected $data;
+    protected $data = [];
     protected $dbUser;
     protected $id_U;
 
@@ -29,10 +29,13 @@ class UserController extends BaseController
     public function Transfer($validation = '')
     {
         $this->data['tableBank'] = GetBank();
-        $this->data['numberAccount'] = $this->dbUser->getAccountUser($this->id_U);
         if ($validation) {
             $this->data['validation'] = $this->validator;
         }
+        $params = $this->getNumberAccountAndPrice();
+        $this->data['numberAccount'] = $params['numberAccount'];
+        $this->data['priceOneAccount'] = $params['price'];
+
         return view('Users/transfer', $this->data);
     }
 
@@ -97,13 +100,14 @@ class UserController extends BaseController
     public function viewHistory()
     {
         $this->data['history'] = $this->dbUser->getHistory($this->id_U);
-        $this->data['numberAccount'] = $this->dbUser->getAccountUser($this->id_U);
+        $this->data['numberAccount'] = $this->dbUser->getAccountUser($this->id_U, 'id_U');
         return view('Users/viewHistory', $this->data);
     }
 
     public function viewHistoryOne(int $id)
     {
-        return view('Users/viewHistoryOne');
+        $this->data['transfer'] = $this->dbUser->getTransfer($id);
+        return view('Users/viewHistoryOne', $this->data);
     }
 
     public function TransferBank()
@@ -111,13 +115,20 @@ class UserController extends BaseController
         if ($this->request->getMethod() === 'post') {
             $checkValid = [
                 'account_you' => 'required',
+                'priceSource' => [
+                    'rules' => 'required|validPriceAccount[priceSource]|validPriceAccountWithPrice[priceSource,price]',
+                    'errors' => [
+                        'validPriceAccount' => 'Brak srodków na koncie',
+                        'validPriceAccountWithPrice' => 'Niewystarczająca ilość środków na koncie'
+                    ]
+                ],
                 'address' => 'required',
                 'numberAccount' => [
                     'rules' => 'required|exact_length[26]|numeric|validNumberAccount[numberAccount,nameBank]',
                     'errors' => [
                         'exact_length' => 'Numer konta powinien składać sie z 26 cyfr',
                         'numeric' => 'Numer konta powinien składać sie z cyfr',
-                        'numberAccount' => 'Numer konta naszego banku jest nieprawidłowy'
+                        'validNumberAccount' => 'Nieprawidłowy numer banku'
                     ]
                 ],
                 'price' => [
@@ -148,7 +159,7 @@ class UserController extends BaseController
                 'transferDate' => $this->request->getPost('dataTransfer'),
             ];
 
-            $this->dbUser->insertTransfer($params);
+            $this->dbUser->insertDB($params, 'transfer');
             session()->setFlashdata('successInsert', 'true');
 
             if (session()->get('isNumber'))
@@ -156,5 +167,163 @@ class UserController extends BaseController
 
             return $this->Transfer();
         }
+    }
+
+    public function getNumberAccountAndPrice()
+    {
+        $numberAccount = $this->dbUser->getAccountUser($this->id_U, 'id_U');
+        $transferAccount = $this->dbUser->transferNumberAccount($numberAccount[0]->id_N);
+        $price = $this->countTheAmount($transferAccount, $numberAccount[0]->id_N);
+
+        return ['price' => $price, 'numberAccount' => $numberAccount];
+    }
+
+    public function HomeUser()
+    {
+        $params = $this->getNumberAccountAndPrice();
+        $this->data['price'] = $params['price'];
+        $this->data['numberAccount'] = $params['numberAccount'];
+        return view('Users/home', $this->data);
+    }
+    public function addAccount()
+    {
+        $numberAccount = $this->dbUser->getAccountUser($this->id_U, 'id_U');
+        if (count($numberAccount) === 2) {
+            session()->setFlashdata('errorAccount', 'true');
+            return $this->HomeUser();
+        }
+
+        $params = [
+            'id_U' => $this->id_U,
+            'number' => CreateNumberAccount(),
+        ];
+        $this->dbUser->insertDB($params, 'numberaccount');
+        session()->setFlashdata('successInsert', 'true');
+        return $this->HomeUser();
+    }
+
+    public function countTheAmount(array $params, string $account): int
+    {
+        $price = 0;
+        foreach ($params as $value) {
+            $value->transferFrom === $account ?   $price -= $value->price : $price += $value->price;
+        }
+
+        return $price;
+    }
+
+    public function ajaxAccount()
+    {
+        $id = $this->request->getGet('id');
+        $transferAccount = $this->dbUser->transferNumberAccount($id);
+        $price = $this->countTheAmount($transferAccount, $id);
+        echo json_encode([
+            'price' => $price,
+        ]);
+    }
+
+    public function ownTransfer()
+    {
+        $numberAccount = $this->dbUser->getAccountUser($this->id_U, 'id_U');
+        if (count($numberAccount) === 1) {
+            session()->setFlashdata('noOwnTransfer', 'true');
+            return $this->HomeUser();
+        }
+
+        if ($this->request->getMethod() === 'post') {
+            $checkVali = [
+                'priceSource' => [
+                    'rules' => 'validPriceAccount[priceSource]|validPriceAccountWithPrice[priceSource,price]',
+                    'errors' => [
+                        'validPriceAccount' => 'Brak srodków na koncie',
+                        'validPriceAccountWithPrice' => 'Niewystarczająca ilość środków na koncie'
+                    ]
+                ],
+                'price' => [
+                    'rules' => 'required|validPrice[price]',
+                    'errors' => [
+                        'validPrice' => 'Kwota przelewu musi być wieksza od 0'
+                    ]
+                ]
+
+
+            ];
+            if (!$this->validate($checkVali)) {
+                $this->data['validation'] = $this->validator;
+            } else {
+                $params = [
+                    'transferFrom' => $this->request->getPost('accountSource'),
+                    'transferTo' => $this->request->getPost('accountTarget'),
+                    'title' => $this->request->getPost('description'),
+                    'transferDate' => $this->request->getPost('dataTransfer'),
+                    'price' => $this->request->getPost('price'),
+                    'nameBank' => 'Bank Wielkopolski',
+                    'adresO' => '-'
+                ];
+                $this->dbUser->insertDB($params, 'transfer');
+                session()->setFlashdata('successTransfer', 'true');
+                return $this->HomeUser();
+            }
+        }
+
+        $transferAccount = $this->dbUser->transferNumberAccount($numberAccount[0]->id_N);
+        $transferAccountNextAccount = $this->dbUser->transferNumberAccount($numberAccount[1]->id_N);
+        $this->data['priceOneAccount'] = $this->countTheAmount($transferAccount, $numberAccount[0]->id_N);
+        $this->data['priceTwoAccount'] = $this->countTheAmount($transferAccountNextAccount, $numberAccount[1]->id_N);
+        $this->data['numberAccount'] = $numberAccount;
+
+
+        return view('Users/ownTransfer', $this->data);
+    }
+
+    public function reportProblem()
+    {
+        if ($this->request->getMethod() == 'post') {
+            $checkValid = [
+                'titleProblem' => [
+                    'rules' => 'required|min_length[10]',
+                    'errors' => [
+                        'min_length' => 'Tytuł problemu powinien składać sie minimum z 10 znaków'
+                    ]
+                ],
+                'descriptionProblem' => [
+                    'rules' => 'required|min_length[10]',
+                    'errors' => [
+                        'min_length' => 'Opis problemu powinien składać sie minimum z 10 znaków'
+                    ]
+                ],
+                'dateProblems' => [
+                    'rules' => 'required|validDate[dateProblems]',
+                    'errors' => ['validDate' => 'Nieprawidłowa data']
+                ]
+            ];
+            if (!$this->validate($checkValid)) {
+                $this->data['validation'] = $this->validator;
+            } else {
+                $params = [
+                    'id_U' => $this->id_U,
+                    'title' => htmlentities($this->request->getPost('titleProblem')),
+                    'description' => htmlentities($this->request->getPost('descriptionProblem')),
+                    'dateProblems' => $this->request->getPost('dateProblems'),
+                    'dateCreateProblems' => $this->request->getPost('dateCreated'),
+                ];
+                $this->dbUser->insertDB($params, 'messages');
+                session()->setFlashdata('successSendProblem', 'true');
+            }
+        }
+
+        return view('Users/reportProblem', $this->data);
+    }
+
+    public function messagesUser()
+    {
+        $this->data['messages'] = $this->dbUser->getMessages($this->id_U);
+        return view('Users/messagesUser', $this->data);
+    }
+
+    public function viewMessageUser(int $id)
+    {
+        $this->data['message'] = $this->dbUser->getMessages($id, 'id_M');
+        return view('Users/viewMessageUser', $this->data);
     }
 }

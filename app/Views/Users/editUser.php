@@ -1,4 +1,4 @@
-<?php $this->extend('Users/dashboard') ?>
+<?php $this->extend('templates/dashboard') ?>
 
 <?php $this->section('content') ?>
 
