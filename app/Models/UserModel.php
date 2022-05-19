@@ -49,10 +49,32 @@ class UserModel extends Model
         return $result;
     }
 
-    public function getMessages(int $id, string $column = 'id_U'): array
+    public function getMessages(array $params = []): array
     {
         $builder = $this->db->table('messages');
-        $result = $builder->where($column, $id)->get()->getResult();
+        if ($params) {
+            foreach ($params as $key => $value) {
+                $builder->where($key, $value);
+            }
+        }
+
+        $result = $builder->get()->getResult();
+        return $result;
+    }
+
+    public function getHistoryAjax(string $idUser, array $params): array
+    {
+        $builder = $this->db->table('transfer');
+        $builder->distinct()->join('numberaccount', 'numberaccount.id_N=transfer.transferFrom or numberaccount.id_N=transfer.transferTo');
+        $builder->where('numberaccount.id_U', $idUser);
+        foreach ($params as $key => $value) {
+            $builder->where($key, $value);
+        }
+
+        $result = $builder->orderBy('transferDate', 'desc')->get()->getResult();
+
+
+
         return $result;
     }
 }

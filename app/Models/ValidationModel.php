@@ -29,10 +29,10 @@ class ValidationModel extends Model
     {
         $builder = $this->db->table('UsersList');
         $user = $builder->where('Email', $username)->get()->getResult();
-        if (!$user) {
+        if (!$user)
             return false;
-        } else
-            return password_verify($password, $user[0]->Password);
+
+        return password_verify($password, $user[0]->Password);
     }
 
     public function checkNumberAccount($accountNumber): bool
@@ -46,5 +46,16 @@ class ValidationModel extends Model
             return true;
         }
         return false;
+    }
+
+    public function getItem(array $params, string $table): array
+    {
+        $builder = $this->db->table($table);
+
+        foreach ($params as $key => $value) {
+            $builder->where($key, $value);
+        }
+
+        return $builder->get()->getResult();
     }
 }

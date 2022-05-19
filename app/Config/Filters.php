@@ -12,6 +12,7 @@ use App\Filters\Auth;
 use App\Filters\NoAuth;
 use App\Filters\PermissionEmployee;
 use App\Filters\PermissionUser;
+use App\Filters\PermissionAdmin;
 
 class Filters extends BaseConfig
 {
@@ -30,7 +31,8 @@ class Filters extends BaseConfig
         'auth' => Auth::class,
         'noauth' => NoAuth::class,
         'permissionemployee' => PermissionEmployee::class,
-        'permissionuser' => PermissionUser::class
+        'permissionuser' => PermissionUser::class,
+        'permissionadmin' => PermissionAdmin::class
     ];
 
     /**

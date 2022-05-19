@@ -110,10 +110,11 @@ class AuthController extends BaseController
 
                 ],
                 'passwordLogin' => [
-                    'rules' => 'required|min_length[8]|validUser[emailLogin,passwordLogin]',
+                    'rules' => 'required|min_length[8]|validUser[emailLogin,passwordLogin]|checkBlock[emailLogin]',
                     'errors' => [
                         'min_length' => 'Hasło musi składać sie z minumium 8 znaków',
-                        'validUser' => 'Nieprawidłowe dane użytkownika'
+                        'validUser' => 'Nieprawidłowe dane użytkownika',
+                        'checkBlock' => 'Twoje konto zostało zablokowane,prosimy skontaktować się z działem obsługi'
                     ]
                 ],
                 'loginKey' => [
@@ -146,6 +147,8 @@ class AuthController extends BaseController
                 return redirect()->to('HomeUser');
             else if ($user[0]->permissions === '5 ')
                 return redirect()->to('messages');
+            else
+                return redirect()->to('viewGroup/ShowKlient');
         }
 
         return redirect()->to('/');

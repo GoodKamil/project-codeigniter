@@ -101,6 +101,7 @@ class UserController extends BaseController
     {
         $this->data['history'] = $this->dbUser->getHistory($this->id_U);
         $this->data['numberAccount'] = $this->dbUser->getAccountUser($this->id_U, 'id_U');
+        $this->data['status'] = GetStatus();
         return view('Users/viewHistory', $this->data);
     }
 
@@ -317,13 +318,56 @@ class UserController extends BaseController
 
     public function messagesUser()
     {
-        $this->data['messages'] = $this->dbUser->getMessages($this->id_U);
+        $this->data['status'] = GetStatus();
+        $this->data['messages'] = $this->dbUser->getMessages(['id_U' => $this->id_U]);
         return view('Users/messagesUser', $this->data);
     }
 
     public function viewMessageUser(int $id)
     {
-        $this->data['message'] = $this->dbUser->getMessages($id, 'id_M');
+
+        $this->data['message'] = $this->dbUser->getMessages(['id_M' => $id]);
         return view('Users/viewMessageUser', $this->data);
+    }
+
+    public function ajaxSearch()
+    {
+        $dateDo = $this->request->getGet('dateDo') ?? date('Y-m-d');
+        $dateOd = $this->request->getGet('dateOd') ?? date('Y-m-d');
+        $params = [
+            'transferDate >=' => $dateOd,
+            'transferDate <=' => $dateDo
+        ];
+
+        $result = $this->dbUser->getHistoryAjax($this->id_U, $params);
+        $numberAccount = $this->dbUser->getAccountUser($this->id_U, 'id_U');
+        return json_encode([
+            'params' => $result,
+            'numberAccount' =>  $numberAccount
+        ]);
+    }
+
+    public function ajaxSearchMessages()
+    {
+
+
+        $params = [
+            'dateProblems >=' => $this->request->getGet('dateOd') ?? date('Y-m-d'),
+            'dateProblems <=' => $this->request->getGet('dateDo') ?? date('Y-m-d'),
+            'status' => $this->request->getGet('status') ?? 1,
+            'id_U' => $this->id_U,
+        ];
+        $result = $this->dbUser->getMessages($params);
+        return json_encode([
+            'params' => $result,
+        ]);
+    }
+
+    public function GetUserIDAjax()
+    {
+        $id = $this->request->getGet('id');
+        return json_encode([
+            'user' => GetUserID($id),
+        ]);
     }
 }

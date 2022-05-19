@@ -3,8 +3,24 @@
 <?php $this->section('content') ?>
 
 <section class="contener__account ">
-    <div class="contener__account--div scroll-class">
-
+    <div class="search__contener">
+        <form action='#' id='form'>
+            <div class="row__search">
+                <div class="search-item">
+                    <label for="numberAccount" class="form--label">Data od</label>
+                    <input type="date" class='form--input' name='dateOd' value=<?= set_value('dateOd', date('Y-m-d')) ?>>
+                </div>
+                <div class="search-item">
+                    <label for="numberAccount" class="form--label">Data do</label>
+                    <input type="date" class='form--input' name='dateDo' value=<?= set_value('dateDo', date('Y-m-d')) ?>>
+                </div>
+            </div>
+            <div class="btn_search">
+                <button class="edit__buton" id='button__search'>Pokaż</button>
+            </div>
+        </form>
+    </div>
+    <div class="contener__account--div scroll-class topSet" id='search__contener'>
         <?php
         $array = [];
         foreach ($history as $value) :
@@ -43,6 +59,8 @@
         endforeach; ?>
     </div>
 </section>
+
+<script src=<?= base_url('js/ajax-search.js') ?>></script>
 
 
 <?php $this->endSection() ?>

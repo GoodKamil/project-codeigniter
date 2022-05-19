@@ -52,6 +52,9 @@ $routes->group('', ['filter' => 'auth', 'filter' => 'permissionuser'], function 
     $routes->add('reportProblem', 'User\UserController::reportProblem');
     $routes->get('messagesUser', 'User\UserController::messagesUser');
     $routes->get('viewMessageUser/(:num)', 'User\UserController::viewMessageUser/$1');
+    $routes->get('ajaxSearch', 'User\UserController::ajaxSearch');
+    $routes->get('ajaxSearchMessages', 'User\UserController::ajaxSearchMessages');
+    $routes->get('GetUserIDAjax', 'User\UserController::GetUserIDAjax');
 });
 
 $routes->group('', ['filter' => 'noauth'], function ($routes) {
@@ -63,6 +66,12 @@ $routes->group('', ['filter' => 'noauth'], function ($routes) {
 $routes->group('', ['filter' => 'auth', 'filter' => 'permissionemployee'], function ($routes) {
     $routes->get('messages', 'Employee\EmployeeController::messages');
     $routes->match(['get', 'post'], 'viewMessage/(:num)', 'Employee\EmployeeController::viewMessage/$1');
+});
+
+$routes->group('', ['filter' => 'auth', 'filter' => 'permissionadmin'], function ($routes) {
+    $routes->match(['get', 'post'], 'viewGroup/(:any)', 'Admin\AdminController::index/$1');
+    $routes->get('blockUser/(:num)/(:any)', 'Admin\AdminController::blockUser/$1/$2');
+    $routes->match(['get', 'post'], 'addEmployee', 'Admin\AdminController::addEmployee');
 });
 
 // $routes->group('User', function ($routes) {

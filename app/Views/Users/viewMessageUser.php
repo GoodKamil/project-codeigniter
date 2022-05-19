@@ -3,6 +3,7 @@
 <?php $this->section('content') ?>
 
 <section class="contener__account">
+
     <div class="contener__account--div">
         <?php if ($message) : ?>
             <div class="acount">

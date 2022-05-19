@@ -18,6 +18,15 @@ class AuthValidation
         return $this->db->validUser($data['emailLogin'], $data['passwordLogin']);
     }
 
+    public function checkBlock(string $str, string $fields, array $data): bool
+    {
+        $result = $this->db->getItem(['Email' => $data['emailLogin']], 'UsersList');
+        if ($result[0]->block == '1')
+            return false;
+
+        return true;
+    }
+
     public function is_key(string $str, string $fields, array $data): bool
     {
         return $this->db->is_key($data['loginKey'], $data['emailLogin']);

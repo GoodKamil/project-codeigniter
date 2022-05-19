@@ -15,6 +15,7 @@
     <script type="text/javascript" src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href='https://css.gg/css' rel='stylesheet'>
     <link rel="stylesheet" href="<?= base_url('style/style.css') ?>">
     <title>AppBank</title>
 </head>
