@@ -18,11 +18,10 @@ class AdminController extends BaseController
         $this->id_U = session()->get('id_U');
         helper('form');
     }
-    public function index(string $show)
+    public function index()
     {
-        $params = ['permissions' => $show == 'ShowKlient' ? 1 : 5];
+        $params = ['permissions' => 1];
         $this->data['result'] = $this->db->getItem('userslist', $params);
-        $this->data['show'] = $show == 'ShowKlient' ? 'ShowEmployess' : 'ShowKlient';
         return view('Admin/viewGroup', $this->data);
     }
 
@@ -95,5 +94,17 @@ class AdminController extends BaseController
         }
 
         return view('Admin/addEmployee', $this->data);
+    }
+
+    public function getListGroups()
+    {
+        $show = $this->request->getGet('show');
+        $param = ['permissions' => $show == 'ShowEmployee' ? 5 : 1];
+        $result = $this->db->getItem('userslist', $param);
+        return json_encode([
+            'params' => $result,
+            'show' => $show == 'ShowEmployee' ? 'ShowUsers' : 'ShowEmployee',
+            'text' => $show == 'ShowEmployee' ? 'Pokaż użytkowników' : 'Pokaż pracowników'
+        ]);
     }
 }

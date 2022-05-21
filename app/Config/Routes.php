@@ -69,9 +69,10 @@ $routes->group('', ['filter' => 'auth', 'filter' => 'permissionemployee'], funct
 });
 
 $routes->group('', ['filter' => 'auth', 'filter' => 'permissionadmin'], function ($routes) {
-    $routes->match(['get', 'post'], 'viewGroup/(:any)', 'Admin\AdminController::index/$1');
+    $routes->match(['get', 'post'], 'viewGroup', 'Admin\AdminController::index');
     $routes->get('blockUser/(:num)/(:any)', 'Admin\AdminController::blockUser/$1/$2');
     $routes->match(['get', 'post'], 'addEmployee', 'Admin\AdminController::addEmployee');
+    $routes->get('getListGroups', 'Admin\AdminController::getListGroups');
 });
 
 // $routes->group('User', function ($routes) {

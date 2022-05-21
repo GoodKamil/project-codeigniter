@@ -6,9 +6,10 @@
 <section class="contener__account ">
     <div class="contener__account--div width">
         <div>
-            <a class="show__group" href="<?= base_url('viewGroup/' . $show) ?>">
-                <p style="margin:1.5rem 0;"><?= $show == 'ShowKlient' ? 'Pokaż klientów' : 'Pokaż pracowników'  ?></p>
-            </a>
+            <form action="#" id="form_get_show">
+                <label id="click_labe_show" class="show__group">Pokaż pracowników</label>
+                <input type="hidden" value="ShowEmployee" id='show' name='show'>
+            </form>
         </div>
         <script type="text/javascript">
             $(document).ready(function() {
@@ -35,7 +36,7 @@
                         <th style="text-align:center">Akcje</th>
                     </tr>
                 </thead>
-                <tbody class='table__contener-tbody'>
+                <tbody class='table__contener-tbody' id="tableParams">
                     <?php $x = 0;
                     foreach ($result as $row) : ?>
                         <tr class='tbody--tr'>
@@ -54,7 +55,7 @@
                                         </a>
                                     <?php else : ?>
                                         <a href="<?= base_url('blockUser/' . $row->id_U . '/block') ?>">
-                                            <button class=" button__action background-Noblock">Zablokuj</button>
+                                            <button class=" button__action background-unlock">Zablokuj</button>
                                         </a>
                                     <?php endif; ?>
                                 </div>
@@ -66,4 +67,5 @@
         </div>
     </div>
 </section>
+<script src=<?= base_url('js/ajax-search-Group.js') ?>></script>
 <?php $this->endSection() ?>

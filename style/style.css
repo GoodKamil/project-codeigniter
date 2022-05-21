@@ -7,9 +7,9 @@ html {
   font-size: 62.5%;
 }
 :root {
-  --color--contener: #56bbf1;
+  --color--contener: #84c9d9;
   --color--contener-black: #4d77ff;
-  --color--contener-light: #5ee6eb;
+  --color--contener-light: #208db8;
   --color--contener-yellow: #f2fa5a;
   --color--white: rgba(255, 255, 255, 0.7);
   --color--text: #1f2d51;
@@ -282,7 +282,7 @@ a:hover {
   outline: none;
   border-style: none;
   background: var(--color--contener-light);
-  color: var(--color--text);
+  color: var(--color--white);
   font-family: inherit;
   letter-spacing: 1px;
   padding: 0.5rem 2rem;
@@ -295,13 +295,14 @@ a:hover {
 .background-block {
   background-color: var(--color-paymentRed);
 }
-.background-Noblock {
+.background-unlock {
   background-color: var(--color-turkus);
 }
 
 .contener__account {
   position: relative;
   width: 100%;
+  background: #f2efdc;
 }
 .contener__account--div,
 .search__contener {
@@ -498,6 +499,7 @@ a:hover {
   color: var(--color--text);
   text-decoration: underline;
   margin: 2rem 0;
+  cursor: pointer;
 }
 
 /* ---------------------------------------------------------TABLE----------------------------------------------------------------------------------------- */
@@ -659,5 +661,17 @@ thead th {
   }
   .basis {
     margin-bottom: 1.5rem;
+  }
+}
+
+@media screen and (max-width: 900px) and (orientation: landscape) {
+}
+
+@media screen and (max-width: 700px) and (orientation: landscape) {
+  .contener__account--div,
+  .search__contener {
+    width: 85%;
+    height: 90vh;
+    overflow-y: scroll;
   }
 }

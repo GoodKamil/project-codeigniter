@@ -21,7 +21,7 @@
 
             </div>
             <div class="acount">
-                <h2 class="account--text">Wiadomośc</h2>
+                <h2 class="account--text">Wiadomość</h2>
                 <div class="select--acount">
                     <textarea class='form--input' style="resize:none;" disabled><?= $message[0]->description ?></textarea>
                 </div>

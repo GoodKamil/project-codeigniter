@@ -36,10 +36,7 @@ class AuthController extends BaseController
                     ],
                 ],
                 'password' => [
-                    'rules' => 'required|min_length[8]',
-                    'errors' => [
-                        'min_length' => 'Hasło musi składać sie z minumium 8 znaków'
-                    ]
+                    'rules' => 'required',
                 ],
                 'RepeatPassword' => [
                     'rules' => 'required|matches[password]',
@@ -110,9 +107,8 @@ class AuthController extends BaseController
 
                 ],
                 'passwordLogin' => [
-                    'rules' => 'required|min_length[8]|validUser[emailLogin,passwordLogin]|checkBlock[emailLogin]',
+                    'rules' => 'required|validUser[emailLogin,passwordLogin]|checkBlock[emailLogin]',
                     'errors' => [
-                        'min_length' => 'Hasło musi składać sie z minumium 8 znaków',
                         'validUser' => 'Nieprawidłowe dane użytkownika',
                         'checkBlock' => 'Twoje konto zostało zablokowane,prosimy skontaktować się z działem obsługi'
                     ]
