@@ -61,6 +61,10 @@ $routes->group('', ['filter' => 'noauth'], function ($routes) {
     $routes->get('/', 'AuthController::index');
     $routes->match(['get', 'post'], 'LoginUser', 'AuthController::LoginUser');
     $routes->match(['get', 'post'], 'createAccount', 'AuthController::createAccount');
+    $routes->match(['get', 'post'], 'recoverPassword', 'AuthController::recoverPassword');
+    $routes->get('recoverChangePassword/(:any)/(:any)', 'AuthController::recoverChangePassword/$1/$2');
+    $routes->post('doRecoverChangePassword', 'AuthController::doRecoverChangePassword');
+    $routes->get('activeAccount/(:any)/(:any)', 'AuthController::activeAccount/$1/$2');
 });
 
 $routes->group('', ['filter' => 'auth', 'filter' => 'permissionemployee'], function ($routes) {

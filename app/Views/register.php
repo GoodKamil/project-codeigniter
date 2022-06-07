@@ -6,7 +6,7 @@
         <div class="create_account">
             <?php if (session()->getFlashdata('errorInsert')) : ?>
                 <div class="error_contener">
-                    <p class="error_contener-tekst">Wystąpił problem przy rejestracji</p>
+                    <p class="error_contener-tekst"><?=session()->getFlashdata('errorInsert') ?></p>
                 </div>
             <?php endif; ?>
             <div class="title__div">

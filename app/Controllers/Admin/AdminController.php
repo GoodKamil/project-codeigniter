@@ -9,7 +9,7 @@ class AdminController extends BaseController
 {
     protected $db;
     public $data = [];
-
+    protected  $id_U;
 
     public function __construct()
     {

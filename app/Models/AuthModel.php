@@ -9,9 +9,9 @@ class AuthModel extends Model
 {
     protected $db;
 
-    public function __construct(ConnectionInterface &$db)
+    public function __construct(ConnectionInterface $db)
     {
-        $this->db = &$db;
+        $this->db = $db;
     }
 
     public function createUser(array $params): int
@@ -24,8 +24,7 @@ class AuthModel extends Model
     public function getUser(array $params): array
     {
         $builder = $this->db->table('UsersList');
-        $result = $builder->where($params)->get(1)->getResult();
-        return $result;
+        return $builder->where($params)->get(1)->getResult();
     }
 
 
@@ -35,9 +34,8 @@ class AuthModel extends Model
         $builder = $this->db->table('UsersList');
         $builder->update($set, $params);
     }
-    public function updateDate(array $set): bool
+    public function updateDate(array $set,array $where): bool
     {
-        $where = ['id_U' => session()->get('id_U')];
         $builder = $this->db->table('UsersList');
         $builder->update($set, $where);
         return $builder->countAll();

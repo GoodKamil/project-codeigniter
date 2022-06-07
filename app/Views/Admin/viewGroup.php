@@ -3,6 +3,38 @@
 <?php $this->section('content') ?>
 
 
+<style>
+    @media screen and (max-width: 800px) {
+        td:nth-of-type(1):before {
+            content: 'LP';
+        }
+
+        td:nth-of-type(2):before {
+            content: 'Imie';
+        }
+
+        td:nth-of-type(3):before {
+            content: 'Nazwisko:';
+        }
+
+        td:nth-of-type(4):before {
+            content: 'Email:';
+        }
+
+        td:nth-of-type(5):before {
+            content: 'Telefon:';
+        }
+
+        td:nth-of-type(6):before {
+            content: 'Ostatnie połączenie:';
+        }
+
+        td:nth-of-type(7):before {
+            content: 'Akcje:';
+        }
+    }
+</style>
+
 <section class="contener__account ">
     <div class="contener__account--div width">
         <div>
@@ -23,7 +55,7 @@
             });
         </script>
 
-        <div class="contener__table">
+        <div class="contener__table scroll--class--table ">
             <table class="table__contener" id="dataTable">
                 <thead class='table__contener-thead'>
                     <tr class='thead--tr'>
@@ -50,11 +82,11 @@
                                 <div class="contener--action">
                                     <button class="button__action">Edytuj</button>
                                     <?php if ($row->block == '1') : ?>
-                                        <a href="<?= base_url('blockUser/' . $row->id_U . '/unlock') ?>">
+                                        <a class="button__action" href="<?= base_url('blockUser/' . $row->id_U . '/unlock') ?>">
                                             <button class="button__action background-block">Odblokuj</button>
                                         </a>
                                     <?php else : ?>
-                                        <a href="<?= base_url('blockUser/' . $row->id_U . '/block') ?>">
+                                        <a class='link-width' href="<?= base_url('blockUser/' . $row->id_U . '/block') ?>">
                                             <button class=" button__action background-unlock">Zablokuj</button>
                                         </a>
                                     <?php endif; ?>

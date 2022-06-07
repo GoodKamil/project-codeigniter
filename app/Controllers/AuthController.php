@@ -7,7 +7,7 @@ use App\Models\AuthModel;
 class AuthController extends BaseController
 {
     protected $db;
-    protected $data;
+    protected $data=[];
 
     public function __construct()
     {
@@ -73,7 +73,7 @@ class AuthController extends BaseController
                 'KeyLogin' => $this->request->getPost('Key'),
                 'Password' => $this->hashPassword($this->request->getPost('password')),
                 'created' => date('Y-m-d'),
-                'permissions' => 1
+                'permissions' => 1,
 
             ];
             $result = $this->db->createUser($params);
@@ -83,12 +83,13 @@ class AuthController extends BaseController
                     'id_U' => $result
                 ];
                 $this->db->insertNumberAccount($params2);
-                session()->setFlashdata('successInsert', 'true');
-                return view('login');
-            } else {
-                session()->setFlashdata('errorInsert', 'true');
-                return view('register');
+                $this->ActiveSendEmail($result,createToken(),$params['Email']);
+                return redirect()->to('/');
+
             }
+
+            session()->setFlashdata('errorInsert', 'Wystąpił problem przy rejestracji');
+            return view('register');
         }
 
         return view('register');
@@ -97,7 +98,7 @@ class AuthController extends BaseController
     public function LoginUser()
     {
 
-        if ($this->request->getMethod() == 'post') {
+        if ($this->request->getMethod() === 'post') {
             $checkVali = [
                 'emailLogin' => [
                     'rules' => 'required|valid_email',
@@ -132,6 +133,11 @@ class AuthController extends BaseController
                 'KeyLogin' => htmlentities($this->request->getPost('loginKey')),
             ];
             $user = $this->db->getUser($params);
+            if($user[0]->active==0)
+            {
+                session()->setFlashdata('error','Twoje konto jest nie akywne , prosimy aktywować konto');
+                return redirect()->to('/');
+            }
             $this->db->lastConnect($params);
             $sessionArray = [
                 'isLoggedIn' => true,
@@ -139,12 +145,15 @@ class AuthController extends BaseController
                 'id_U' => $user[0]->id_U
             ];
             session()->set($sessionArray);
-            if ($user[0]->permissions === '1')
+            if ($user[0]->permissions === '1') {
                 return redirect()->to('HomeUser');
-            else if ($user[0]->permissions === '5 ')
+            }
+
+            if ($user[0]->permissions === '5 ') {
                 return redirect()->to('messages');
-            else
-                return redirect()->to('viewGroup/ShowKlient');
+            }
+
+            return redirect()->to('viewGroup/ShowKlient');
         }
 
         return redirect()->to('/');
@@ -158,5 +167,133 @@ class AuthController extends BaseController
     public function hashPassword(string $password): string
     {
         return password_hash($password, PASSWORD_DEFAULT);
+    }
+
+    public function recoverPassword()
+    {
+        if($this->request->getMethod()==='post')
+        {
+
+           $CheckValid=[
+               'Email'=>[
+                   'rules'=>'required|valid_email|emailExists[Email]',
+                   'errors' => [
+                       'valid_email' => 'Niepoprawny adres e-mail',
+                       'emailExists'=>'Adres e-mail nie istnieje'
+                       ]
+               ]
+           ];
+
+           if(!$this->validate($CheckValid))
+           {
+               $this->data['validation']=$this->validator;
+           }else
+           {
+               $email=htmlentities($this->request->getPost('Email'));
+               $this->sendEmailUser($email,createToken());
+           }
+
+        }
+
+        return view('recoverPassword',$this->data);
+    }
+
+    public function sendEmailUser(string $email,string $token)
+    {
+        $messages='Twój link do zmiany hasła <a href="'.base_url('recoverChangePassword/'.$email.'/'.$token).'">'.base_url('recoverChangePassword/'.$email.'/'.$token).' </a>.Prosimy nie odpowiadać na wiadomośc , w razie pytań zapraszam na stronę banku pod adresem <a href="'.base_url().'">'.base_url().'</a>';
+        $subject='Odzyskiwanie konto';
+        if($this->createEmailSent($messages,$subject,$email))
+        {
+            $this->db->updateDate(['token'=>$token],['Email'=>$email]);
+            session()->setFlashdata('successSend', 'Na podany adres e-mail został wysłany link ze zmianą hasła');
+        }
+        else
+        {
+            session()->setFlashdata('errorSend', 'Wystąpił problem przy odzyskiwaniu konta');
+        }
+
+
+    }
+
+    public function ActiveSendEmail(int $idUser,string $token,string $email)
+    {
+       $messages='Link aktywacyjny <a href="'.base_url('activeAccount/'.$idUser.'/'.$token).'">'.base_url('activeAccount/'.$idUser.'/'.$token).' </a>.Prosimy nie odpowiadać na wiadomośc , w razie pytań zapraszamy na stronę banku pod adresem <a href="'.base_url().'">'.base_url().'</a>';
+        $subject='Link aktywacyjny';
+        if($this->createEmailSent($messages,$subject,$email))
+        {
+            $this->db->updateDate(['token'=>$token],['id_U'=>$idUser]);
+            session()->setFlashdata('success', 'Na podany adres e-mail został wysłany link aktywacyjny');
+        }
+        else
+        {
+            session()->setFlashdata('error', 'Wystąpił problem z wysłaniem na adres e-mail linku aktywacyjnego');
+        }
+
+
+    }
+
+    public function activeAccount(string $idUser,string $token)
+    {
+        $user=$this->db->getUser(['id_U'=>$idUser]);
+        if($user && $user[0]->token===$token && $user[0]->active==='0')
+        {
+            $this->db->updateDate(['token'=>NULL,'active'=>1],['id_U'=>$idUser]);
+            session()->setFlashdata('success', 'Twoje konto zostało aktywowane , możesz sie zalogować');
+
+        }
+        return redirect()->to('/');
+    }
+
+    public function recoverChangePassword(string $email,string $token)
+    {
+            $userToken=$this->db->getUser(['Email'=>$email]);
+            if($userToken[0]->token===$token) {
+                $this->data['idUser']=$userToken[0]->id_U;
+                return view('recoverChangePassword',$this->data);
+            }
+            else
+                redirect()->to('/');
+
+
+    }
+
+    public function doRecoverChangePassword()
+    {
+
+        $checkValid=[
+            'password'=> 'required',
+            'repeatPassword'=>[
+                'rules'=>'required|matches[password]',
+                'errors'=> ['matches'=>'Hasła muszą być takie same']
+            ]
+        ];
+
+        $idUser=$this->request->getPost('idUser');
+
+        if(!$this->validate($checkValid))
+        {
+            $this->data['idUser']=$idUser;
+            $this->data['validation']=$this->validator;
+            return view('recoverChangePassword',$this->data);
+        }
+
+        $password=htmlentities($this->request->getPost('password'));
+        $set=[
+            'password'=>$this->hashPassword($password),
+            'token'=>NULL
+        ];
+        $this->db->updateDate($set,['id_U'=>$idUser]);
+        session()->setFlashdata('success','Twoje hasło zostało zmienione');
+        return redirect()->to('/');
+    }
+
+    public function createEmailSent(string $messages,string $subject,string $email)
+    {
+        $configEmail= \Config\Services::email();
+        $configEmail->setTo($email);
+        $configEmail->setFrom($email);
+        $configEmail->setMessage($messages);
+        $configEmail->setSubject($subject);
+        return $configEmail->send();
     }
 }

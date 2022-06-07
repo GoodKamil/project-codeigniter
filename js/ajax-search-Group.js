@@ -25,7 +25,7 @@ $(function () {
                             <td>
                                 <div class="contener--action">
                                     <button class="button__action">Edytuj</button>
-                                    <a href="http://${
+                                    <a class='link-width' href="http://${
                                       window.location.host
                                     }/blockUser/${param.id_U}/${checkblock}">
                                             <button class="button__action background-${

@@ -18,6 +18,16 @@ class AuthValidation
         return $this->db->validUser($data['emailLogin'], $data['passwordLogin']);
     }
 
+    public function emailExists(string $str, string $fields, array $data) : bool
+    {
+        $isUser=$this->db->getItem(['Email' => $data['Email']], 'UsersList');
+        if($isUser){
+            return true;
+        }
+
+        return false;
+    }
+
     public function checkBlock(string $str, string $fields, array $data): bool
     {
         $result = $this->db->getItem(['Email' => $data['emailLogin']], 'UsersList');

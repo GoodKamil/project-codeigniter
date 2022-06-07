@@ -9,7 +9,7 @@ class CrudModel extends Model
 {
     protected $db;
 
-    public function __construct(ConnectionInterface &$db)
+    public function __construct(ConnectionInterface $db)
     {
         $this->db = &$db;
     }
@@ -23,13 +23,11 @@ class CrudModel extends Model
             $builder->where($key, $value);
         }
 
-        foreach ($order as $order => $date) {
-            $builder->orderBy($order, $date);
+        foreach ($order as $key => $date) {
+            $builder->orderBy($key, $date);
         }
 
-        $result = $builder->get()->getResult();
-
-        return $result;
+        return $builder->get()->getResult();
     }
 
     public function updateTable(string $table, array $params, array $where)

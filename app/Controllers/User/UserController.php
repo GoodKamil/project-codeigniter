@@ -83,7 +83,7 @@ class UserController extends BaseController
                 'NumberPhone' => $this->request->getPost('phone'),
                 'Email' => htmlentities($this->request->getPost('email'))
             ];
-            $isUpdate = $this->db->updateDate($params);
+            $isUpdate = $this->db->updateDate($params,['id_U' => session()->get('id_U')]);
             if ($isUpdate) {
                 session()->setFlashdata('successUpdate', 'true');
                 return  redirect()->to('Settings');
@@ -170,7 +170,7 @@ class UserController extends BaseController
         }
     }
 
-    public function getNumberAccountAndPrice()
+    public function getNumberAccountAndPrice():array
     {
         $numberAccount = $this->dbUser->getAccountUser($this->id_U, 'id_U');
         $transferAccount = $this->dbUser->transferNumberAccount($numberAccount[0]->id_N);
@@ -352,14 +352,19 @@ class UserController extends BaseController
 
 
         $params = [
-            'dateProblems >=' => $this->request->getGet('dateOd') ?? date('Y-m-d'),
-            'dateProblems <=' => $this->request->getGet('dateDo') ?? date('Y-m-d'),
-            'status' => $this->request->getGet('status') ?? 1,
+            'dateCreateProblems >=' => $this->request->getGet('dateOd') ?? date('Y-m-d'),
+            'dateCreateProblems <=' => $this->request->getGet('dateDo') ?? date('Y-m-d'),
             'id_U' => $this->id_U,
         ];
+
+        if ($this->request->getGet('status'))
+            $params += ['status' => $this->request->getGet('status')];
+
+
         $result = $this->dbUser->getMessages($params);
         return json_encode([
             'params' => $result,
+
         ]);
     }
 

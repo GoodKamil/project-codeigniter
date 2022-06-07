@@ -9,7 +9,7 @@ class UserModel extends Model
 {
     protected $db;
 
-    public function __construct(ConnectionInterface &$db)
+    public function __construct(ConnectionInterface $db)
     {
         $this->db = &$db;
     }
@@ -18,8 +18,7 @@ class UserModel extends Model
     public function getAccountUser(string $param, string $column): array
     {
         $builder = $this->db->table('numberaccount');
-        $result = $builder->where($column, $param)->get()->getResult();
-        return $result;
+        return $builder->where($column, $param)->get()->getResult();
     }
     public function insertDB(array $params, string $table)
     {
@@ -45,8 +44,7 @@ class UserModel extends Model
     public function getTransfer(int $idTransfer): array
     {
         $builder = $this->db->table('transfer');
-        $result = $builder->where('id_T', $idTransfer)->get()->getResult();
-        return $result;
+        return $builder->where('id_T', $idTransfer)->get()->getResult();
     }
 
     public function getMessages(array $params = []): array
@@ -58,8 +56,7 @@ class UserModel extends Model
             }
         }
 
-        $result = $builder->get()->getResult();
-        return $result;
+        return $builder->get()->getResult();
     }
 
     public function getHistoryAjax(string $idUser, array $params): array
@@ -71,10 +68,6 @@ class UserModel extends Model
             $builder->where($key, $value);
         }
 
-        $result = $builder->orderBy('transferDate', 'desc')->get()->getResult();
-
-
-
-        return $result;
+        return $builder->orderBy('transferDate', 'desc')->get()->getResult();
     }
 }

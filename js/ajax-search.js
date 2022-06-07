@@ -11,6 +11,12 @@ $(function () {
       success: function (response) {
         $('#search__contener').empty();
 
+        if (response.params.length === 0) {
+          const html = '<p class="noresult">Brak danych</p>';
+          $('#search__contener').append(html);
+          return;
+        }
+
         let array = [];
         $.each(response.params, function (index, param) {
           if (!array.includes(param.id_T)) {

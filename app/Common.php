@@ -53,8 +53,9 @@ if (!function_exists('GetNameBank')) {
     {
         $bank = GetBank();
         foreach ($bank as $key => $value) {
-            if ($key === $numer)
+            if ($key === $numer) {
                 return $value;
+            }
         }
     }
 }
@@ -170,5 +171,19 @@ if (!function_exists('WaitingNews')) {
         $dbEmployee = new EmployeeModel($db);
         $result = $dbEmployee->getMessages(['status' => '1']);
         return count($result);
+    }
+}
+
+if (!function_exists('createToken')) {
+    /**
+     *
+     * Pobranie statusów lub statusu wiadomości
+     *
+     */
+    function createToken(): string
+    {
+        $token=openssl_random_pseudo_bytes(32);
+        $token = bin2hex($token);
+        return $token;
     }
 }

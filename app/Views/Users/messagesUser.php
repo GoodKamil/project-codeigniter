@@ -19,6 +19,7 @@
                 <div class="search-item1">
                     <label for="numberAccount" class="form--label">Status wiadomości</label>
                     <select name="status" class="form--input">
+                        <option value="0">Wszystkie</option>
                         <?php foreach ($status as $key => $value) : ?>
                             <option <?= isset($_POST['status']) && $_POST['status'] == $key  ? 'selected' : ''  ?> value="<?= $key ?>"><?= $value ?></option>
                         <?php endforeach; ?>
@@ -73,9 +74,15 @@
                 dataType: 'JSON',
                 success: function(response) {
                     $('#search__contener').empty();
+
+                    if (response.params.length === 0) {
+                        const html = '<p class="noresult">Brak danych</p>';
+                        $('#search__contener').append(html);
+                        return;
+
+                    }
+
                     $.each(response.params, function(index, param) {
-                        const idE = param.id_E != '0' ? 'Doradca klienta ' + GetUserID(param.id_E) : '-';
-                        console.log(GetUserID(param.id_E));
                         let icon = 'bi-patch-question';
                         if (param.status === '2')
                             icon = 'bi-patch-check';
@@ -87,10 +94,10 @@
                      <div class=" contener__history">
                     <div class="contener__history--address">
                         <div class="icon">
-                            <i class="historyIcon bi${icon}"></i>
+                            <i class="historyIcon bi ${icon}"></i>
                         </div>
                         <div style="margin-left:1rem;">
-                            <h4 class="address" id='text-user'>${idE}</h4>
+                            <h4 class="address" id='text-user'>${GetUserID(param.id_E)}</h4>
                             <p class="history--text">${param.title}</p>
                         </div>
                     </div>
@@ -111,6 +118,11 @@
 
 
     function GetUserID(idUser) {
+        let Name = '-';
+
+        if (idUser == 0)
+            return Name;
+
 
         $.ajax({
             type: 'GET',
@@ -122,16 +134,14 @@
             dataType: 'JSON',
             async: false,
             success: function(response) {
-                return response.user;
+                Name = 'Doradca klienta ' + response.user;
             },
             failure: function(response) {
-                return response.message
+                Name = 'Wystąpił problem, przepraszamy za utrudnienia';
             }
         })
-    }
 
-    function returnFuctionAjax(value) {
-        return value
+        return Name;
     }
 </script>
 
